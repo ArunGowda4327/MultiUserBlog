@@ -1,0 +1,76 @@
+{% extends "blog/base.html" %}
+
+
+
+
+{# Testing purpose i used this
+{# <h2>{{post.text}}</h2>
+<h2>{{post.created_date}}</h2>
+
+
+<a href="{% url 'update' pk=post.pk %}"><button type='submit' class="btn btn-primary">Update</button></a>
+
+<a href="{% url 'remove' pk=post.pk %}"><button type='submit' class="btn btn-primary">Delete</button></a> #}
+
+
+
+{% block content %}
+
+<h1>{{post.title}}</h1>
+
+{% if post.image %}
+    <img src="{{post.image.url}}" class="img-fluid" height="150" width="150">
+{% endif %}
+
+
+<hr>
+
+{% if post.published_date %}
+{{ post.published_date }}
+{% else %}
+<a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+{% endif %}
+
+
+
+<p>{{ post.text|safe|linebreaksbr }}</p>
+
+<hr>
+
+
+
+
+{% if user.is_authenticated %}
+
+          <a class="btn btn-primary" href="{% url 'update' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+          <a class="btn btn-primary" href="{% url 'remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+
+{% endif %}
+
+<hr>
+
+<a class="btn btn-primary btn-comment" href="{% url 'comment' pk=post.pk %}">Add Comment</a>
+
+<hr>
+
+{% for comment in post.comments.all %}
+<br>
+{% if user.is_authenticated or comment.approved_comment %}
+{{ comment.created_date }}
+{% if not comment.approved_comment %}
+
+<a class="btn btn-primary" href="{% url 'comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+<a class="btn btn-primary" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+
+
+{% endif %}
+<p>{{comment.text|safe|linebreaks}}</p>
+<p>Posted By: {{comment.author}}</p>
+
+{% endif %}
+{% empty %}
+      <p>No comments posted.</p>
+
+{% endfor %}
+
+{% endblock %}

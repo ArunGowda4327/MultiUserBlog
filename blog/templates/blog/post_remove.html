@@ -1,0 +1,17 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+  <h1>Are you sure you want to delete "{{ post.title }}"??</h1>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <input type="submit" class="btn btn-danger" value="Submit">
+
+  </form>
+
+
+
+
+{% endblock %}
